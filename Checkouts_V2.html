@@ -1,0 +1,242 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrated Checkout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+            color: #333333;
+        }
+
+        .top-bar {
+            background-color: #ffffff;
+            color: #333333;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            .top-bar button {
+                background-color: #007BFF;
+                color: #ffffff;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 14px;
+            }
+
+                .top-bar button:hover {
+                    background-color: #0056b3;
+                }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .cart {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+            .cart-item:last-child {
+                border-bottom: none;
+            }
+
+        .summary {
+            margin-top: 30px;
+            padding: 15px;
+            background: #f9f9f9;
+            border: 1px solid #dddddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background: #007BFF;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+            button:hover {
+                background: #0056b3;
+            }
+
+        .empty-cart {
+            text-align: center;
+            color: #777;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1>Checkout</h1>
+        <button onclick="window.location.href='highlight book.html'">Back to Menu</button>
+    </div>
+
+    <div class="container">
+        <form id="checkout-form">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Shipping Address</label>
+                <textarea id="address" name="address" rows="3" placeholder="Enter your address" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="payment">Payment Method</label>
+                <select id="payment" name="payment" required>
+                    <option value="credit">Credit Card</option>
+                    <option value="paypal">PayPal</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="credit-card-section" style="display: none;">
+                <label for="card-details">Card Details</label>
+                <input type="text" id="card-details" name="card-details" placeholder="Card Number">
+            </div>
+        </form>
+
+        <div class="cart">
+            <h2>Your Cart</h2>
+            <div id="cart-items" class="empty-cart">Your cart is empty</div>
+        </div>
+
+        <div class="summary">
+            <h2>Order Summary</h2>
+            <p><strong>Books:</strong> <span id="summary-books">None</span></p>
+            <p><strong>Total:</strong> <span id="summary-total">RM 0.00</span></p>
+        </div>
+
+        <button onclick="completePurchase()">Complete Purchase</button>
+    </div>
+
+    <script>
+        const cartItemsContainer = document.getElementById('cart-items');
+        const summaryBooks = document.getElementById('summary-books');
+        const summaryTotal = document.getElementById('summary-total');
+        const paymentMethod = document.getElementById('payment');
+        const creditCardSection = document.getElementById('credit-card-section');
+
+        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+        function loadCart() {
+            cartItemsContainer.innerHTML = "";
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = "<p class='empty-cart'>Your cart is empty</p>";
+                summaryBooks.textContent = "None";
+                summaryTotal.textContent = "RM 0.00";
+                return;
+            }
+
+            let total = 0;
+            const books = [];
+
+            cart.forEach((item, index) => {
+                total += item.price * item.quantity;
+                books.push(`${item.title} (x${item.quantity})`);
+
+                const cartItem = document.createElement('div');
+                cartItem.classList.add('cart-item');
+                cartItem.innerHTML = `
+                        <span>${item.title} - RM ${item.price} x ${item.quantity}</span>
+                        <button onclick="removeItem(${index})">Remove</button>
+                    `;
+                cartItemsContainer.appendChild(cartItem);
+            });
+
+            summaryBooks.textContent = books.join(", ");
+            summaryTotal.textContent = `RM ${total.toFixed(2)}`;
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCart();
+        }
+
+        function completePurchase() {
+            const form = document.getElementById('checkout-form');
+            if (!form.checkValidity()) {
+                alert("Please complete all required fields.");
+                return;
+            }
+
+            alert("Purchase Completed!");
+            cart = [];
+            localStorage.setItem("cart", JSON.stringify(cart));
+            loadCart();
+        }
+
+        paymentMethod.addEventListener('change', () => {
+            creditCardSection.style.display = paymentMethod.value === 'credit' ? 'block' : 'none';
+        });
+
+        loadCart();
+    </script>
+</body>
+</html>

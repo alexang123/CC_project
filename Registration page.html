@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore - Create Account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .registration-container {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+            .registration-container h1 {
+                text-align: center;
+                color: #333;
+            }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+            }
+
+            .form-group input {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                font-size: 14px;
+            }
+
+                .form-group input:required {
+                    border-left: 4px solid #ff6347;
+                }
+
+        .create-account-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+            .create-account-btn:hover {
+                background-color: #0056b3;
+            }
+
+        .or-divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+            .or-divider::before, .or-divider::after {
+                content: '';
+                flex: 1;
+                border-bottom: 1px solid #ccc;
+            }
+
+            .or-divider:not(:empty)::before {
+                margin-right: .25em;
+            }
+
+            .or-divider:not(:empty)::after {
+                margin-left: .25em;
+            }
+
+        .login-link {
+            text-align: center;
+            margin: 10px 0;
+        }
+
+            .login-link a {
+                color: #007bff;
+                text-decoration: none;
+            }
+
+        .social-login-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            background-color: #fff;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+            .social-login-btn img {
+                width: 20px;
+                height: 20px;
+                margin-right: 10px;
+            }
+
+            .social-login-btn:hover {
+                background-color: #f4f4f4;
+            }
+    </style>
+</head>
+<body>
+    <div class="registration-container">
+        <h1>Create an Account</h1>
+        <form id="registrationForm">
+            <div class="form-group">
+                <label for="email">Email address*</label>
+                <input type="email" id="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="username">Username*</label>
+                <input type="text" id="username" placeholder="Enter your username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password*</label>
+                <input type="password" id="password" placeholder="Enter your password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Reconfirm Password*</label>
+                <input type="password" id="confirm-password" placeholder="Reconfirm your password" required>
+            </div>
+            <div class="form-group">
+                <label for="phone">Handphone Number*</label>
+                <input type="tel" id="phone" placeholder="Enter your handphone number" required>
+            </div>
+            <div class="form-group">
+                <label for="address">Address*</label>
+                <input type="text" id="address" placeholder="Enter your address" required>
+            </div>
+            <button type="submit" class="create-account-btn">Create an Account</button>
+        </form>
+        <div class="login-link">
+            Already have an account? <a href="bookshop.html">Login</a>
+        </div>
+        <div class="or-divider">
+            <label>OR</label>
+        </div>
+        <div class="social-login">
+            <button class="social-login-btn" onclick="socialLogin('google')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_%22G%22_logo.svg" alt="Google Logo">
+                Continue with Google
+            </button>
+            <button class="social-login-btn" onclick="socialLogin('microsoft')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft Logo">
+                Continue with Microsoft Account
+            </button>
+            <button class="social-login-btn" onclick="socialLogin('apple')">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Logo">
+                Continue with Apple
+            </button>
+        </div>
+    </div>
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function (event) {
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+
+            if (!email || !username || !password || !confirmPassword || !phone || !address) {
+                alert('Please fill in all required fields.');
+                event.preventDefault();
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                alert('Passwords do not match.');
+                event.preventDefault();
+                return;
+            }
+
+            // Redirect to Account Created Page
+            window.location.href = 'account created succesffully.html';
+            event.preventDefault(); // Prevent default form submission
+        });
+
+       /*function socialLogin(provider) {
+            switch (provider) {
+                case 'google':
+                    window.location.href = 'google-login.html';
+                    break;
+                case 'microsoft':
+                    window.location.href = 'microsoft-login.html';
+                    break;
+                case 'apple':
+                    window.location.href = 'apple-login.html';
+                    break;
+                default:
+                    alert('Unsupported login provider.');
+            }
+        }*/
+    </script>
+</body>
+</html>

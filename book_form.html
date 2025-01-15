@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+        }
+        input, button {
+            margin-top: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Book Details</h1>
+            <button class="add-btn" onclick="window.location.href='adminv2.html'">Back</button>
+        </div>
+        <form id="book-form">
+            <label for="title">Title</label>
+            <input type="text" id="title" name="title" required>
+
+            <label for="author">Author</label>
+            <input type="text" id="author" name="author" required>
+
+            <label for="price">Price (RM)</label>
+            <input type="number" step="0.01" id="price" name="price" required>
+
+            <label for="type">Book Type</label>
+            <input type="text" id="type" name="type">
+
+            <label for="url">Photo URL</label>
+            <input type="text" id="url" name="url">
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4" style="resize: vertical;"></textarea>            
+
+            <button type="submit">Save</button>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000'; // Replace with your backend URL
+        const params = new URLSearchParams(window.location.search);
+        const bookId = params.get('id');
+
+        // Auto-adjust textarea height
+        const adjustTextareaHeight = (textarea) => {
+            textarea.style.height = 'auto'; // Reset height
+            textarea.style.height = textarea.scrollHeight + 'px'; // Set height to scrollHeight
+        };
+
+        // Adjust the height when content is loaded
+        const descriptionField = document.getElementById('description');
+        descriptionField.addEventListener('input', () => adjustTextareaHeight(descriptionField));
+
+        if (bookId) {
+            fetch(`${API_URL}/api/books/${bookId}`)
+                .then(response => response.json())
+                .then(book => {
+                    document.getElementById('title').value = book.title;
+                    document.getElementById('author').value = book.author;
+                    document.getElementById('price').value = parseFloat(book.price).toFixed(2);
+                    
+                                // Handle book.type stringified array
+                try {
+                    const bookType = JSON.parse(book.type); // Parse stringified array
+                    if (Array.isArray(bookType)) {
+                        document.getElementById('type').value = bookType.join(', '); // Display as comma-separated text
+                    } else {
+                        document.getElementById('type').value = ''; // Default if not an array
+                    }
+                } catch (error) {
+                    console.error('Error parsing book.type:', error);
+                    document.getElementById('type').value = ''; // Default if parsing fails
+                }
+                    document.getElementById('url').value = book.photo_url;
+                    document.getElementById('description').value = book.description;
+                })
+                .catch(err => console.error('Error fetching book:', err));
+        }
+
+        document.getElementById('book-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const bookData = {
+                title: document.getElementById('title').value,
+                author: document.getElementById('author').value,
+                price: parseFloat(document.getElementById('price').value).toFixed(2),
+                type: JSON.stringify(
+                    document.getElementById('type').value.split(',').map(item => item.trim())
+                ), // Convert back to stringified JSON array
+                photo_url: document.getElementById('url').value, // Correct field name
+                description: document.getElementById('description').value // Correct field name
+            };
+
+            const method = bookId ? 'PUT' : 'POST';
+            const endpoint = bookId ? `${API_URL}/api/books/${bookId}` : `${API_URL}/api/books`;
+
+            fetch(endpoint, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(bookData),
+            })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = 'adminv2.html'; // Redirect to admin page
+                    } else {
+                        return response.json().then(err => {
+                            console.error('Backend error:', err);
+                            alert('Failed to save book. Please check your input.');
+                        });
+                    }
+                })
+                .catch(err => console.error('Error saving book:', err));
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Bookshop</title>
+
+    <!-- Link to Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background: url('https://www.thebookseller.com/AcuCustom/Sitename/DAM/455/Margate-1920-X-1080.jpg') no-repeat center center/cover;
+        }
+        .title {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .title h1 {
+            font-family: 'Pacifico', cursive; /* Fancy font */
+            font-size: 50px;
+            color: rgb(250, 246, 250); /* Purple color */
+            margin: 0;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        .login-container h2 {
+            margin: 10px 0 20px;
+            color: #34495e;
+        }
+        input[type="text"], input[type="password"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        button {
+            width: 95%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+  
+        .secondary-button {
+            background: none;
+            color: #2c3e50;
+            border: none;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+
+        /* Side Bar for Extra Info */
+        .side-bar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            width: 300px;
+            height: 100%;
+            padding: 20px;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .side-bar h3 {
+            margin-top: 0;
+            margin-bottom: 15px; /* Space between each heading */
+            color: #34495e;
+        }
+
+        .side-bar p {
+            margin: 0 0 20px 0; /* Space between each paragraph */
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <!-- Big Title at the Top -->
+    <div class="title">
+        <h1>The Lant Bookshop</h1>
+    </div>
+
+    <!-- Login Container -->
+    <div class="login-container">
+        <h2>Welcome to The Lant Bookshop!</h2>
+        
+        <input type="text" id="username" placeholder="Username" required><br>
+        <input type="password" id="password" placeholder="Password" required><br>
+        <button onclick="login()">Login</button>
+        
+        <button class="secondary-button" onclick="window.location.href='Registration page.html'">New in Bookshop? Sign Up</button>
+        <button class="secondary-button" onclick="window.location.href='Forget Pw 1.html'">Forgot Password?</button>
+        <button class="secondary-button" onclick="window.location.href='highlight book.html'">Continue as guest</button>
+    </div>
+
+    <!-- Side Bar for Extra Info -->
+    <div class="side-bar">
+        <h3>Our Slogan</h3>
+        <p>"Books for Every Mind."</p>
+
+        <h3>Bookshop History</h3>
+        <p>Founded in 1998, The Lant Bookshop has been offering a wide variety of books for all ages and tastes.</p>
+
+        <h3>Address</h3>
+        <p>123 Book St., Melaka, Malaysia</p>
+
+        <h3>Contact No</h3>
+        <p>+60 123 456 789</p>
+
+        <h3>Email</h3>
+        <p>1998@lantbookshop.com</p>
+    </div>
+
+    <script>
+        function login() {
+            // Get input values
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Check credentials
+            if (username === 'admin' && password === '1234') {
+                // Redirect to admin.html
+                window.location.href = 'adminv2.html';
+            } 
+            
+            else if (username === 'user1' && password === '1234'){
+                window.location.href = 'highlight book.html';                
+            }
+            
+            else {
+                // Show error message
+                document.getElementById('error-message').style.display = 'block';
+            }
+        }
+    </script>
+
+</body>
+</html>
+
+
