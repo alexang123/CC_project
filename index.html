@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Information</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-image: url('image/back.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* Go Back Button */
+        .go-back-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .go-back-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Full height container */
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .book-info {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 1200px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Book photo styling */
+        .book-photo {
+            width: 500px;
+            height: 550px;
+            object-fit:fill;
+            margin-right: 20px;
+        }
+
+        .details {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Align title at the top */
+            align-items: flex-start; /* Align text to the left */
+            height: 100%;
+            max-width: 600px;
+            flex-grow: 1;
+        }
+
+        /* Book Title Styling */
+        .details h1 {
+            font-size: 42px; /* Adjust the size */
+            font-family: 'Arial', sans-serif; /* Change font family */
+            color: #2c3e50; /* Change color */
+            margin-bottom: 10px;
+            margin-top: 0;
+        }
+
+        /* Flexbox Layout for Label and Content */
+        .details p {
+            display: flex;
+            align-items: flex-start; /* Align label and content vertically */
+            margin-bottom: 10px;
+        }
+
+        /* Label Styling */
+        .details p strong {
+            font-weight: bold;
+            margin-right: 10px; /* Space between label and content */
+            min-width: 80px; /* Adjust minimum width for the label */
+        }
+
+        /* Content Styling */
+        .details p span {
+            display: inline-block;
+            flex-grow: 1; /* Allow content to grow and take available space */
+            word-wrap: break-word; /* Ensures text wraps properly */
+        }
+
+        .details .price {
+            font-size: 20px;
+            color: #e67e22;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: 30px;
+        }
+
+        .add-to-cart-btn {
+            background-color: #2ecc71;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+            align-self: flex-start; /* Align the button at the bottom of the text */
+        }
+
+        .add-to-cart-btn:hover {
+            background-color: #27ae60;
+        }
+
+/*
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .book-title {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .book-details {
+            margin-top: 20px;
+        }
+            */
+    </style>
+</head>
+<body>
+ 
+    <!-- Go Back Button -->
+    <button class="go-back-btn" onclick="window.history.back();">Go Back</button>
+
+    <!-- <div class="container">
+        <h1 class="book-title" id="book-title">Loading...</h1>
+        <div class="book-details">
+            <p><strong>Author:</strong> <span id="book-author"></span></p>
+            <p><strong>Price:</strong> <span id="book-price"></span></p>
+            <p><strong>Description:</strong> <span id="book-description"></span></p>
+        </div>
+    </div> -->
+
+    <!-- Full-window container -->
+    <div class="container">
+        
+        <div class="book-info">
+            <!-- Book Image -->
+            <img id="book-photo" src="" alt="Book Photo" class="book-photo">
+
+            <!-- Book Details -->
+            <div class="details">
+                <!-- Book Title -->
+                <h1 id="book-title">Book Title</h1>
+
+                <!-- Book Summary -->
+                <p><strong>Summary:</strong> <span id="book-description">This is a brief summary of the book.</span></p>
+
+                <!-- Book Author -->
+                <p><strong>Author:</strong> <span id="book-author">Author Name</span></p>
+
+                <!-- Book Type -->
+                <p><strong>Type:</strong> <span id="book-type">NULL</span></p>
+
+                <!-- Book Price -->
+                <p class="price" id="book-price">RM --</p>
+                
+
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Get the book ID from the query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = urlParams.get('book');
+        let index = {};
+        // Fetch book details from the backend
+        fetch(`http://localhost:3000/api/books/${bookId}`)
+            .then(response => response.json())
+            .then(book => {
+                // Populate the page with book details
+                document.getElementById('book-title').textContent = book.title;
+                document.getElementById('book-author').textContent = book.author;
+                document.getElementById('book-price').textContent = `RM ${book.price}`;
+                document.getElementById('book-description').textContent = book.description;
+                document.getElementById('book-photo').src = book.photo_url;
+                document.getElementById('book-type').textContent = book.type;
+                document.getElementById('book-index').textContent = index[bookId];
+
+            })
+            .catch(err => {
+                console.error('Error fetching book details:', err);
+            });
+        // Update the quantity on the page
+        function updateQuantity(index, quantity) {
+            const quantitySpan = document.getElementById(`quantity-${index}`);
+            quantitySpan.innerText = quantity;
+        }
+
+        // Increase quantity
+        function increaseQuantity(index) {
+            // If the book doesn't exist in the index array, initialize its quantity to 0
+            if (!(index in index)) {
+                index[index] = 0;
+            }
+
+            // Increase the quantity
+            index[index] += 1;
+
+            // Update the quantity on the page
+            updateQuantity(index, index[index]);
+
+            // Optionally, store the updated quantities in localStorage
+            localStorage.setItem("index", JSON.stringify(index));
+        }
+
+        // Decrease quantity
+        function decreaseQuantity(index) {
+            // If the book exists in the index array and has a quantity greater than 0
+            if (index in index && index[index] > 0) {
+                // Decrease the quantity
+                index[index] -= 1;
+            }
+
+            // If the quantity is 0, remove the book from the index array
+            if (index[index] === 0) {
+                delete index[index];
+            }
+
+            // Update the quantity on the page (default to 0 if no quantity exists)
+            updateQuantity(index, index[index] || 0);
+
+            // Optionally, store the updated quantities in localStorage
+            localStorage.setItem("index", JSON.stringify(index));
+        }
+
+    </script>
+</body>
+</html>
